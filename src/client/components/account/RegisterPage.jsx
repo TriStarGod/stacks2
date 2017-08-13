@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import map from 'lodash/map';
 
 import { AUTH_REGISTER } from '../../redux/auth';
+// import validateInput from '../../validator/auth/register';
+import validateInput from '../../../server/shared/validator/auth/register';
 
 const roles = {
   public: 'Public',
@@ -33,6 +35,7 @@ class RegisterPage extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitCB = this.onSubmitCB.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.isValid = this.isValid.bind(this);
   }
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
@@ -44,15 +47,11 @@ class RegisterPage extends React.Component {
   }
   onSubmit(e) {
     e.preventDefault();
-    console.log('submit running');
-    // if (this.state.passwordConfirmation !== this.state.password) {
-    //   this.onError("Password doesn't match!");
-    //   return;
-    // }
-    // console.log(this.state);
-    this.props.AUTH_REGISTER(this.onSubmitCB, this.state.email, this.state.username,
-      this.state.password, this.state.passwordConfirmation, this.state.firstName,
-      this.state.lastName, this.state.role);
+    if (this.isValid()) {
+      this.props.AUTH_REGISTER(this.onSubmitCB, this.state.email, this.state.username,
+        this.state.password, this.state.passwordConfirmation, this.state.firstName,
+        this.state.lastName, this.state.role);
+    }
     // console.log(mapDispatchToProps);
     // console.log(this.props.AUTH_LOGIN_ASYNC);
     // console.log(`${this.state.email} ${this.state.password}`);
@@ -64,6 +63,13 @@ class RegisterPage extends React.Component {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen,
     });
+  }
+  isValid() {
+    const { errors, isValid } = validateInput(this.state);
+    if (!isValid) {
+      this.setState({ errors });
+    }
+    return isValid;
   }
   render() {
     const options = map(roles, (value, key) =>
