@@ -40,7 +40,8 @@
     "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "validator": "^8.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

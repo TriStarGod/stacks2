@@ -4,15 +4,17 @@ import axios from 'axios';
 export const AUTH_REGISTER_REQUEST = () => ({ type: 'AUTH_REGISTER_REQUEST' });
 export const AUTH_REGISTER_SUCCESS = () => ({ type: 'AUTH_REGISTER_SUCCESS' });
 export const AUTH_REGISTER_FAILURE = () => ({ type: 'AUTH_REGISTER_FAILURE' });
-export function AUTH_REGISTER(Error, email, username, password, firstName, lastName, role) {
+export function AUTH_REGISTER(cb, email, username, password,
+  passwordConfirmation, firstName, lastName, role) {
   return (dispatch) => {
-    console.log(email);
-    Error('');
+    console.log(`Email: ${email}`);
+    cb({}, true);
     dispatch(AUTH_REGISTER_REQUEST());
     axios.post('/api/auth/register', {
       email,
       username,
       password,
+      passwordConfirmation,
       firstName,
       lastName,
       role,
@@ -20,13 +22,13 @@ export function AUTH_REGISTER(Error, email, username, password, firstName, lastN
       .then(() => {
         // console.log('connected');
         // console.log(result);
-        Error('');
+        cb({}, false);
         dispatch(AUTH_REGISTER_SUCCESS());
       })
       .catch((error) => {
         // console.log('error');
         // console.log(error);
-        Error(error);
+        cb(error.response.data, false);
         dispatch(AUTH_REGISTER_FAILURE());
       });
   };
@@ -52,11 +54,11 @@ export function AUTH_REGISTER_REDUCER(state = { AUTH_REGISTER: 'Initial' }, acti
 export const AUTH_LOGIN_REQUEST = () => ({ type: 'AUTH_LOGIN_REQUEST' });
 export const AUTH_LOGIN_SUCCESS = () => ({ type: 'AUTH_LOGIN_SUCCESS' });
 export const AUTH_LOGIN_FAILURE = () => ({ type: 'AUTH_LOGIN_FAILURE' });
-export function AUTH_LOGIN(Error, username, password) {
+export function AUTH_LOGIN(cb, username, password) {
   return (dispatch) => {
     // console.log(`this: ${this}`);
     // console.log(`login function ${username} ${password}`);
-    Error('');
+    cb({}, true);
     dispatch(AUTH_LOGIN_REQUEST());
     axios.post('/api/auth/login', {
       username,
@@ -65,13 +67,13 @@ export function AUTH_LOGIN(Error, username, password) {
       .then(() => {
         // console.log('connected');
         // console.log(res);
-        Error('');
+        cb({}, false);
         dispatch(AUTH_LOGIN_SUCCESS());
       })
       .catch((error) => {
         // console.log('error');
         // console.log(error);
-        Error(error);
+        cb(error.response.data, false);
         dispatch(AUTH_LOGIN_FAILURE());
       });
   };

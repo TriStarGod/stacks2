@@ -32,7 +32,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 // an approach for connecting express to our auth setup
-const LocalStrategy = require('passport-local').Strategy;
+// const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const webpack = require('webpack');
@@ -42,7 +42,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const webpackConfig = require('../../webpack.config');
-const Routes = require('./routes');
+const routes = require('./routes');
 const User = require('../client/models/user');
 
 // instances of express server
@@ -99,7 +99,8 @@ app.use(webpackHotMiddleware(webpackCompiler, {
 app.use(express.static(resolve(__dirname, 'public')));
 
 // route files
-Routes(app); // would make error handling (below) useless
+// routes(app, passport);
+routes(app); // would make error handling (below) useless
 
 // error handler
 app.use((err, req, res, next) => {
