@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Header from './shared/Header';
@@ -15,7 +15,7 @@ import RegisterPage from './account/RegisterPage';
 // like /account/profile/some/thing would work for the second route
 function Base(props) {
   return (
-    <Router>
+    <BrowserRouter>
       <div className="wrapper">
         <Header username="anonymous" />
         {/* <p>{props.PROGRESS}</p> */}
@@ -27,7 +27,7 @@ function Base(props) {
           <Route path="/task/editor/:id" component={TaskEditorPage} />
         </section>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

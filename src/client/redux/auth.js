@@ -1,14 +1,15 @@
 // import { bindActionCreators } from 'redux';
 import axios from 'axios';
+// import { browserHistory } from 'react-router-dom';
 
 export const AUTH_REGISTER_REQUEST = () => ({ type: 'AUTH_REGISTER_REQUEST' });
 export const AUTH_REGISTER_SUCCESS = () => ({ type: 'AUTH_REGISTER_SUCCESS' });
 export const AUTH_REGISTER_FAILURE = () => ({ type: 'AUTH_REGISTER_FAILURE' });
-export function AUTH_REGISTER(cb, email, username, password,
+export function AUTH_REGISTER(successCB, errorCB, email, username, password,
   passwordConfirmation, firstName, lastName, role) {
   return (dispatch) => {
-    console.log(`Email: ${email}`);
-    cb({}, true);
+    // console.log(`Email: ${email}`);
+    // cb({}, true);
     dispatch(AUTH_REGISTER_REQUEST());
     axios.post('/api/auth/register', {
       email,
@@ -20,15 +21,20 @@ export function AUTH_REGISTER(cb, email, username, password,
       role,
     })
       .then(() => {
-        // console.log('connected');
+        // console.log('success');
         // console.log(result);
-        cb({}, false);
+        successCB();
+        // cb({}, false);
+        // browserHistory.push('/');
         dispatch(AUTH_REGISTER_SUCCESS());
+        console.log('success end');
       })
       .catch((error) => {
-        // console.log('error');
-        // console.log(error);
-        cb(error.response.data, false);
+        // console.log('catch error');
+        console.log(error);
+        if (error.response) {
+          errorCB(error.response.data);
+        }
         dispatch(AUTH_REGISTER_FAILURE());
       });
   };

@@ -34,7 +34,8 @@ class RegisterPage extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onSubmitCB = this.onSubmitCB.bind(this);
+    this.onError = this.onError.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
     this.toggle = this.toggle.bind(this);
     this.isValid = this.isValid.bind(this);
   }
@@ -46,19 +47,23 @@ class RegisterPage extends React.Component {
       role: e.currentTarget.textContent,
     });
   }
+  onError(errors) {
+    this.setState({ errors, isLoading: false });
+  }
   onSubmit(e) {
     e.preventDefault();
     if (this.isValid()) {
-      this.props.AUTH_REGISTER(this.onSubmitCB, this.state.email, this.state.username,
-        this.state.password, this.state.passwordConfirmation, this.state.firstName,
-        this.state.lastName, this.state.role);
+      this.props.AUTH_REGISTER(this.onSuccess, this.onError, this.state.email,
+        this.state.username, this.state.password, this.state.passwordConfirmation,
+        this.state.firstName, this.state.lastName, this.state.role);
     }
     // console.log(mapDispatchToProps);
     // console.log(this.props.AUTH_LOGIN_ASYNC);
     // console.log(`${this.state.email} ${this.state.password}`);
   }
-  onSubmitCB(errors, isLoading) {
-    this.setState({ errors, isLoading });
+  onSuccess() {
+    this.setState({ errors: {}, isLoading: false });
+    this.props.history.push('/');
   }
   toggle() {
     this.setState({
@@ -147,6 +152,7 @@ class RegisterPage extends React.Component {
 
 RegisterPage.propTypes = {
   AUTH_REGISTER: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 // function mapDispatchToProps() {

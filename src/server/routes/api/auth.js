@@ -16,7 +16,9 @@ router.post('/register', (req, res) => {
   //   }
   // }, 5000);
   const { errors, isValid } = validateInput(req.body);
-  if (!isValid) {
+  if (isValid) {
+    res.json({ success: true });
+  } else {
     res.status(400).json(errors);
   }
   // // Create a user object to save, using values from incoming JSON
