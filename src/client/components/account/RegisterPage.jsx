@@ -8,6 +8,7 @@ import map from 'lodash/map';
 import { AUTH_REGISTER } from '../../redux/auth';
 // import validateInput from '../../validator/auth/register';
 import validateInput from '../../../server/shared/validator/auth/register';
+import FormGroupText from '../shared/FormGroupText';
 
 const roles = {
   public: 'Public',
@@ -38,7 +39,7 @@ class RegisterPage extends React.Component {
     this.isValid = this.isValid.bind(this);
   }
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.id]: e.target.value });
   }
   onClick(e) {
     this.setState({
@@ -80,54 +81,34 @@ class RegisterPage extends React.Component {
       <div className="row justify-content-center">
         <div className="col-10 col-sm-7 col-md-5 col-lg-4">
           <Form onSubmit={this.onSubmit}>
-            <FormGroup color={errors.email ? 'danger' : ''}>
-              <Label for="email">Email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="email"
-                value={this.state.email}
-                onChange={this.onChange}
-              />
-              {errors.email && <Alert color="danger">{errors.email}</Alert>}
-            </FormGroup>
-            <FormGroup color={errors.username ? 'danger' : ''}>
-              <Label for="username">Username</Label>
-              <Input
-                type="text"
-                name="username"
-                id="username"
-                placeholder="username"
-                value={this.state.username}
-                onChange={this.onChange}
-              />
-              {errors.username && <Alert color="danger">{errors.username}</Alert>}
-            </FormGroup>
-            <FormGroup color={errors.firstName ? 'danger' : ''}>
-              <Label for="firstName">First Name</Label>
-              <Input
-                type="text"
-                name="firstName"
-                id="firstName"
-                placeholder="First Name"
-                value={this.state.firstName}
-                onChange={this.onChange}
-              />
-              {errors.firstName && <Alert color="danger">{errors.firstName}</Alert>}
-            </FormGroup>
-            <FormGroup color={errors.lastName ? 'danger' : ''}>
-              <Label for="lastName">Last Name</Label>
-              <Input
-                type="text"
-                name="lastName"
-                id="lastName"
-                placeholder="Last Name"
-                value={this.state.lastName}
-                onChange={this.onChange}
-              />
-              {errors.lastName && <Alert color="danger">{errors.lastName}</Alert>}
-            </FormGroup>
+            <FormGroupText
+              id="email"
+              value={this.state.email}
+              error={errors.email}
+              label="Email"
+              onChange={this.onChange}
+            />
+            <FormGroupText
+              id="username"
+              value={this.state.username}
+              error={errors.username}
+              label="Username"
+              onChange={this.onChange}
+            />
+            <FormGroupText
+              id="firstName"
+              value={this.state.firstName}
+              error={errors.firstName}
+              label="First Name"
+              onChange={this.onChange}
+            />
+            <FormGroupText
+              id="lastName"
+              value={this.state.lastName}
+              error={errors.lastName}
+              label="Last Name"
+              onChange={this.onChange}
+            />
             <FormGroup color={errors.role ? 'danger' : ''}>
               <Label for="role">Role</Label>
               <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
@@ -140,31 +121,22 @@ class RegisterPage extends React.Component {
               </Dropdown>
               {errors.role && <Alert color="danger">{errors.role}</Alert>}
             </FormGroup>
-            <FormGroup color={errors.password ? 'danger' : ''}>
-              <Label for="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="password"
-                value={this.state.password}
-                onChange={this.onChange}
-              />
-              {errors.password && <Alert color="danger">{errors.password}</Alert>}
-            </FormGroup>
-            <FormGroup color={errors.passwordConfirmation ? 'danger' : ''}>
-              <Label for="passwordConfirmation">Confirm Password</Label>
-              <Input
-                type="password"
-                name="passwordConfirmation"
-                id="passwordConfirmation"
-                placeholder="password"
-                value={this.state.passwordConfirmation}
-                onChange={this.onChange}
-              />
-              {errors.passwordConfirmation
-              && <Alert color="danger">{errors.passwordConfirmation}</Alert>}
-            </FormGroup>
+            <FormGroupText
+              id="password"
+              value={this.state.password}
+              error={errors.password}
+              label="Password"
+              type="password"
+              onChange={this.onChange}
+            />
+            <FormGroupText
+              id="passwordConfirmation"
+              value={this.state.passwordConfirmation}
+              error={errors.passwordConfirmation}
+              label="Password Confirmation"
+              type="password"
+              onChange={this.onChange}
+            />
             <Button disabled={this.state.isLoading}>Register</Button>
           </Form>
         </div>

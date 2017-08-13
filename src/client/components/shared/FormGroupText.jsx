@@ -8,7 +8,7 @@ const FormGroupText = ({ type, label, id, value, error, onChange }) => (
     <Input
       type={type}
       id={id}
-      placeholder={id}
+      placeholder={value}
       value={value}
       onChange={onChange}
     />
@@ -17,9 +17,9 @@ const FormGroupText = ({ type, label, id, value, error, onChange }) => (
 );
 
 FormGroupText.propTypes = {
-  type: PropTypes.string,
-  label: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string,
   value: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func.isRequired,
