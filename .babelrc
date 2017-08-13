@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "es2017",
+    "env",
+    "react"
+  ],
+  "plugins": [
+    "transform-object-rest-spread"
+  ]
+}

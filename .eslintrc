@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "airbnb"
+  ],
+  "plugins": [
+    "jest"
+  ],
+  "env": {
+    "jest": true,
+    "browser": true,
+    "node": true
+  },
+  "settings": {
+    "polyfills": ["fetch"]
+  },
+  "rules": {
+    "no-unused-vars": [
+      2, // 2 = error // remove when possible???
+      {
+        "argsIgnorePattern": "next"
+      }
+    ],
+    "react/prop-types": [0] // remove when possible
+    // "compat/compat": 2
+    // ,"indent": [2, "tab"]
+  }
+}
