@@ -8,6 +8,7 @@ import TaskEditorPage from './task/EditorPage';
 import ProfilePage from './account/ProfilePage';
 import LoginPage from './account/LoginPage';
 import RegisterPage from './account/RegisterPage';
+import FlashMessagesList from './shared/FlashMessagesList';
 
 // Only when the specific path is used, it will render the specific page
 // the exact prop in the HomePage is used to only activate it for / and not /a
@@ -16,10 +17,11 @@ import RegisterPage from './account/RegisterPage';
 function Base(props) {
   return (
     <BrowserRouter>
-      <div className="wrapper">
+      <div className="container">
         <Header username="anonymous" />
         {/* <p>{props.PROGRESS}</p> */}
-        <section className="page-content container-fluid">
+        <FlashMessagesList />
+        <section className="page-content">
           <Route exact path="/" component={HomePage} />
           <Route exact path="/api/auth/login" component={LoginPage} />
           <Route exact path="/api/auth/register" component={RegisterPage} />

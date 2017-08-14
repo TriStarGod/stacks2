@@ -79,7 +79,7 @@ class RegisterPage extends React.Component {
   isValid() {
     const { errors, isValid } = validateInput(this.state);
     if (!isValid) {
-      this.setState({ errors });
+      this.setState({ errors, isLoading: false });
     }
     return isValid;
   }

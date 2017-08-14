@@ -16,7 +16,7 @@ const combinedReducers = combineReducers({
   PROGRESS: PROGRESS_REDUCER,
   AUTH_REGISTER: AUTH_REGISTER_REDUCER,
   AUTH_LOGIN: AUTH_LOGIN_REDUCER,
-  FLASHMESSAGE: FLASHMESSAGE_REDUCER,
+  FLASHMESSAGES: FLASHMESSAGE_REDUCER,
 });
 const enhancer = compose(
   applyMiddleware(logger, thunk),

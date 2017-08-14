@@ -25,7 +25,7 @@ export default class Header extends React.Component {
   }
   render() {
     return (
-      <header className="wrapper">
+      <header className="header clearfix">
         <Navbar color="faded" light toggleable>
           <NavbarToggler right onClick={this.toggleNavbar} />
           <NavbarBrand tag={Link} to="/">Task Management</NavbarBrand>
