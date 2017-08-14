@@ -9,16 +9,19 @@ import DevTools from '../components/utils/DevTools';
 // get progress reducer
 import { PROGRESS_REDUCER } from './progress';
 import { AUTH_REGISTER_REDUCER, AUTH_LOGIN_REDUCER } from './auth';
+import { FLASHMESSAGE_REDUCER } from './flashMessage';
 
-// combine the reducers into one reducer
+// combine the reducers into one "root" reducer
 const combinedReducers = combineReducers({
   PROGRESS: PROGRESS_REDUCER,
   AUTH_REGISTER: AUTH_REGISTER_REDUCER,
   AUTH_LOGIN: AUTH_LOGIN_REDUCER,
+  FLASHMESSAGE: FLASHMESSAGE_REDUCER,
 });
 const enhancer = compose(
   applyMiddleware(logger, thunk),
-  DevTools.instrument(),
+  // DevTools.instrument(),
+  window.devToolsExtension ? window.devToolsExtension() : f => f,
 );
 
 export default function configureStore(initialStore) {

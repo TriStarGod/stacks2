@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './css/musiclist.scss';
 
 // Default export from a local file
-import DevToools from './components/utils/DevTools';
+import DevTools from './components/utils/DevTools';
 import configureStore from './redux/store';
 // import TestComponent from './testcomponent';
 import Base from './components/Base';
@@ -23,7 +23,7 @@ const renderApp = (Component) => {
       <Provider store={Store}>
         <div>
           <Component />
-          <DevToools />
+          {/* <DevTools /> */}
         </div>
       </Provider>
     </AppContainer>,

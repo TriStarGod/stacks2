@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, FormGroup, Label, Input, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
 import map from 'lodash/map';
@@ -9,6 +9,7 @@ import { AUTH_REGISTER } from '../../redux/auth';
 // import validateInput from '../../validator/auth/register';
 import validateInput from '../../../server/shared/validator/auth/register';
 import FormGroupText from '../shared/FormGroupText';
+import { FLASHMESSAGE_ADD } from '../../redux/flashMessage';
 
 const roles = {
   public: 'Public',
@@ -52,6 +53,7 @@ class RegisterPage extends React.Component {
   }
   onSubmit(e) {
     e.preventDefault();
+    this.setState({ errors: {}, isLoading: true });
     if (this.isValid()) {
       this.props.AUTH_REGISTER(this.onSuccess, this.onError, this.state.email,
         this.state.username, this.state.password, this.state.passwordConfirmation,
@@ -62,6 +64,10 @@ class RegisterPage extends React.Component {
     // console.log(`${this.state.email} ${this.state.password}`);
   }
   onSuccess() {
+    this.props.FLASHMESSAGE_ADD({
+      type: 'success',
+      text: 'You signed up successfully. Welcome!',
+    });
     this.setState({ errors: {}, isLoading: false });
     this.props.history.push('/');
   }
@@ -152,6 +158,7 @@ class RegisterPage extends React.Component {
 
 RegisterPage.propTypes = {
   AUTH_REGISTER: PropTypes.func.isRequired,
+  FLASHMESSAGE_ADD: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
@@ -160,4 +167,4 @@ RegisterPage.propTypes = {
 // }
 // null is needed for mapStateToProps which isn't used the following code
 // export default connect(null, mapDispatchToProps)(RegisterPage);
-export default connect(null, { AUTH_REGISTER })(RegisterPage);
+export default connect(null, { AUTH_REGISTER, FLASHMESSAGE_ADD })(RegisterPage);
