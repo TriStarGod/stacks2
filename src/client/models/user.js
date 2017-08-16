@@ -1,20 +1,11 @@
-const mongoose = require('mongoose');
-// Schema is model of what an object should contain
-const Schema = mongoose.Schema;
-const passportLocalMongoose = require('passport-local-mongoose');
+// const bookshelf = require('../../server/bookshelf');
 
-// initialize schema called user with properties
-const User = new Schema({
-  email: String,
-  username: String,
-  password: { type: String, select: false },
-  firstName: String,
-  lastName: String,
-  role: String,
+// module.exports = bookshelf.Model.extend({
+//   tableName: 'users',
+// });
+
+import bookshelf from '../../server/bookshelf';
+
+export default bookshelf.Model.extend({
+  tableName: 'users',
 });
-
-// connects mongoose to passport and user
-User.plugin(passportLocalMongoose, { usernameField: 'email' });
-
-// exports model for use elsewhere
-module.exports = mongoose.model('User', User);

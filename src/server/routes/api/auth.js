@@ -1,10 +1,16 @@
-// import User from '../../../client/models/user';
-const express = require('express');
-const passport = require('passport');
-// const validateInput = require('../../../client/validator/auth/register');
-const validateInput = require('../../shared/validator/auth/register');
+// const express = require('express');
+// const passport = require('passport');
+// const bcrypt = require('bcrypt');
 
-const User = require('../../../client/models/user');
+// const validateInput = require('../../../client/validator/auth/register');
+// const User = require('../../../client/models/user');
+
+import express from 'express';
+import passport from 'passport';
+import bcrypt from 'bcrypt';
+
+import validateInput from '../../shared/validator/auth/register';
+import User from '../../../client/models/user';
 
 const router = express.Router();
 
@@ -17,7 +23,15 @@ router.post('/register', (req, res) => {
   // }, 5000);
   const { errors, isValid } = validateInput(req.body);
   if (isValid) {
-    res.json({ success: true });
+    const { email, username, password, firstName, lastName, role } = req.body;
+    const passwordDigest = bcrypt.hashSync(password, 10);
+
+    User.forge({
+      email, username, firstName, lastName, role, passwordDigest,
+    }, { hasTimestamps: true }).save()
+      .then(() => res.json({ success: true }))
+      .catch(error => res.status(500).json({ error }));
+    // res.json({ success: true });
   } else {
     res.status(400).json(errors);
   }

@@ -29,7 +29,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const passport = require('passport');
 // an approach for connecting express to our auth setup
 // const LocalStrategy = require('passport-local').Strategy;
@@ -50,7 +50,7 @@ const app = express();
 
 // connect to mongoose
 // mongoose.connect(process.env.MONGODB_URI);
-mongoose.createConnection(process.env.MONGODB_URI);
+// mongoose.createConnection(process.env.MONGODB_URI);
 
 // view engine setup - where its found and use view engine ejs
 app.set('views', resolve(__dirname, '../client/views'));
@@ -114,12 +114,12 @@ app.use((err, req, res, next) => {
 });
 
 // configure passport
-// passport.use(new LocalStrategy(User.authenticate));
-passport.use(User.createStrategy());
+// passport.use(new LocalStrategy(User.authenticate)); // if login id is username
+// passport.use(User.createStrategy()); // login id is anything but username (like email)
 // to serialize means to identify the object (ie User) by a unique id
-passport.serializeUser(User.serializeUser());
+// passport.serializeUser(User.serializeUser());
 // to deserialize means to use the id to obtain the full object (ie User)
-passport.deserializeUser(User.deserializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 const server = app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
