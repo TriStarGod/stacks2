@@ -7,7 +7,8 @@ import { FLASHMESSAGE_DELETE } from '../../redux/flashMessage';
 
 // class FlashMessagesList extends React.Component {
 //   render() {
-//     const messages = this.props.messages.map(message => <FlashMEssage key={message.id} message={message} />);
+//     const messages = this.props.messages.map(message => 
+//       <FlashMEssage key={message.id} message={message} />);
 //     return (
 //       <div>{messages}</div>
 //     );
@@ -16,7 +17,12 @@ import { FLASHMESSAGE_DELETE } from '../../redux/flashMessage';
 
 function FlashMessagesList(props) {
   const messages = props.FLASHMESSAGES
-    .map(message => <FlashMessage FLASHMESSAGE_DELETE={props.FLASHMESSAGE_DELETE} key={message.id} message={message} />);
+    .map(message =>
+      (<FlashMessage
+        FLASHMESSAGE_DELETE={props.FLASHMESSAGE_DELETE}
+        key={message.id}
+        message={message}
+      />));
   return (
     <div>{messages}</div>
   );

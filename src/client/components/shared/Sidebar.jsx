@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardBlock, CardText } from 'reactstrap';
 
-export default function Sidebar() {
+function Sidebar() {
   return (
     <aside className="col-sm-12 col-md-4">
       <Card>
@@ -14,3 +14,5 @@ export default function Sidebar() {
     </aside>
   );
 }
+
+export default Sidebar;

@@ -31,7 +31,7 @@ const renderApp = (Component) => {
 };
 // ran so site can restore token on client browser refresh
 if (localStorage.jwtToken) {
-  setAuthToken(localStorage.jwtToken);
+  setAuthToken(store.dispatch, localStorage.jwtToken);
 }
 // run first time app runs
 renderApp(Base);

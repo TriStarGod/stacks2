@@ -72,8 +72,11 @@ module.exports = {
     // path to output css
     new ExtractTextPlugin('css/style.css'),
   ],
-  node: {
-    net: 'empty',
-    dns: 'empty',
-  },
+  // // if using jsonwebtoken on browser side, note that jsonwebtoken uses 
+  // // dependencies net and isemail that isn't available to the browser 
+  // // (should get error on compile); in webpack, add node > net & dns 'empty' to resolve
+  // node: {
+  //   net: 'empty',
+  //   dns: 'empty',
+  // },
 };

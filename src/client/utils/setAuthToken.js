@@ -1,17 +1,18 @@
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
+// import jwt from 'jsonwebtoken';
 
-import store from '../redux/store';
-import { AUTH_LOGIN_SUCCESS } from '../redux/auth';
+// import store from '../redux/store'; // correct but not needed since dispatch
+import { AUTH_SET_USER } from '../redux/auth';
 
-export default function setAuthToken(token) {
+export default function setAuthToken(dispatch, token) {
   // set token in Authorization key (I think it gets created?)
   // delete if token is empty / false
   if (token) {
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    store.dispatch(AUTH_LOGIN_SUCCESS(jwt.decode(localStorage.jwtToken)));
+    dispatch(AUTH_SET_USER(jwtDecode(localStorage.jwtToken)));
   } else {
     delete axios.defaults.headers.common.Authorization;
-    store.dispatch(AUTH_LOGIN_SUCCESS());
+    dispatch(AUTH_SET_USER());
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Sidebar from '../shared/Sidebar';
 
-export default function ProfilePage({ match }) {
+function ProfilePage({ match }) {
   return (
     <div className="row">
       <div className="col-sm-12 col-md-8">
@@ -12,3 +12,5 @@ export default function ProfilePage({ match }) {
     </div>
   );
 }
+
+export default ProfilePage;

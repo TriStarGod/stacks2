@@ -58,16 +58,16 @@ export function AUTH_IF_EXISTS(id, value) {
   return dispatch => axios.get(`/api/auth/exists/${id}/${value}`);
 }
 
-const TYPE_AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST';
-const TYPE_AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
-const TYPE_AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE';
+// const TYPE_AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST';
+// const TYPE_AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE';
+const TYPE_AUTH_SET_USER = 'AUTH_SET_USER';
 
-export const AUTH_LOGIN_REQUEST = () => ({ type: TYPE_AUTH_LOGIN_REQUEST });
-export const AUTH_LOGIN_SUCCESS = user => ({ type: TYPE_AUTH_LOGIN_SUCCESS, user });
-export const AUTH_LOGIN_FAILURE = () => ({ type: TYPE_AUTH_LOGIN_FAILURE });
+// export const AUTH_LOGIN_REQUEST = () => ({ type: TYPE_AUTH_LOGIN_REQUEST });
+// export const AUTH_LOGIN_FAILURE = () => ({ type: TYPE_AUTH_LOGIN_FAILURE });
+export const AUTH_SET_USER = user => ({ type: TYPE_AUTH_SET_USER, user });
 export function AUTH_LOGIN(successCB, errorCB, email, password) {
   return (dispatch) => {
-    dispatch(AUTH_LOGIN_REQUEST());
+    // dispatch(AUTH_LOGIN_REQUEST());
     axios.post('/api/auth/login', {
       email,
       password,
@@ -75,47 +75,50 @@ export function AUTH_LOGIN(successCB, errorCB, email, password) {
       .then((res) => {
         const token = res.data.token;
         localStorage.setItem('jwtToken', token);
-        setAuthToken(token);
+        setAuthToken(dispatch, token);
         successCB();
-        // jsonwebtoken uses dependencies net and isemail that isn't available to browser 
-        // (should get error on compile); in webpack, add node > net & dns 'empty'
         // jwt token decodes into user object
-        // dispatch(AUTH_LOGIN_SUCCESS(jwt.decode(token)));
+        // dispatch(AUTH_SET_USER(jwt.decode(token)));
         // console.log(jwt.decode(token));
       })
       .catch(({ response }) => {
         if (response) {
           errorCB(response.data);
         }
-        dispatch(AUTH_LOGIN_FAILURE());
+        // dispatch(AUTH_LOGIN_FAILURE());
       });
   };
 }
 
 export function AUTH_LOGIN_REDUCER(state = {
-  AUTH_LOGIN: 'Initial',
   isAuthenticated: false,
   user: {},
 }, action) {
   switch (action.type) {
-    case TYPE_AUTH_LOGIN_REQUEST: {
-      return { ...state, AUTH_LOGIN: TYPE_AUTH_LOGIN_REQUEST };
-    }
-    case TYPE_AUTH_LOGIN_SUCCESS: {
+    // case TYPE_AUTH_LOGIN_REQUEST: {
+    //   return { ...state, AUTH_LOGIN: TYPE_AUTH_LOGIN_REQUEST };
+    // }
+    case TYPE_AUTH_SET_USER: {
       return {
         ...state,
-        AUTH_LOGIN: TYPE_AUTH_LOGIN_SUCCESS,
         isAuthenticated: !isEmpty(action.user),
         user: action.user,
       };
     }
-    case TYPE_AUTH_LOGIN_FAILURE: {
-      return { ...state, AUTH_LOGIN: TYPE_AUTH_LOGIN_FAILURE };
-    }
+    // case TYPE_AUTH_LOGIN_FAILURE: {
+    //   return { ...state, AUTH_LOGIN: TYPE_AUTH_LOGIN_FAILURE };
+    // }
     default: {
       return state;
     }
   }
+}
+
+export function AUTH_LOGOUT() {
+  return (dispatch) => {
+    localStorage.removeItem('jwtToken');
+    setAuthToken(dispatch);
+  };
 }
 // export default function mapDispatchToProps(dispatch) {
 //   return bindActionCreators({
@@ -130,7 +133,7 @@ export function AUTH_LOGIN_REDUCER(state = {
 //     AUTH_REGISTER_FAILURE,
 //     AUTH_REGISTER_ASYNC,
 //     AUTH_LOGIN_REQUEST,
-//     AUTH_LOGIN_SUCCESS,
+//     AUTH_SET_USER,
 //     AUTH_LOGIN_FAILURE,
 //     AUTH_LOGIN_ASYNC,
 //   }, dispatch);
