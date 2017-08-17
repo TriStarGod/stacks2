@@ -55,6 +55,10 @@ export function AUTH_REGISTER_REDUCER(state = { AUTH_REGISTER: 'Initial' }, acti
   }
 }
 
+export function AUTH_IF_EXISTS(id, value) {
+  return dispatch => axios.get(`/api/auth/exists/${id}/${value}`);
+}
+
 const TYPE_AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST';
 const TYPE_AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 const TYPE_AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE';

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
 import map from 'lodash/map';
 
-import { AUTH_REGISTER } from '../../redux/auth';
+import { AUTH_REGISTER, AUTH_IF_EXISTS } from '../../redux/auth';
 // import validateInput from '../../validator/auth/register';
 import validateInput from '../../../server/shared/validator/auth/register';
 import FormGroupText from '../shared/FormGroupText';
@@ -39,6 +39,7 @@ class RegisterPage extends React.Component {
     this.onSuccess = this.onSuccess.bind(this);
     this.toggle = this.toggle.bind(this);
     this.isValid = this.isValid.bind(this);
+    this.ifExists = this.ifExists.bind(this);
   }
   onChange(e) {
     this.setState({ [e.target.id]: e.target.value });
@@ -59,9 +60,6 @@ class RegisterPage extends React.Component {
         this.state.username, this.state.password, this.state.passwordConfirmation,
         this.state.firstName, this.state.lastName, this.state.role);
     }
-    // console.log(mapDispatchToProps);
-    // console.log(this.props.AUTH_LOGIN_ASYNC);
-    // console.log(`${this.state.email} ${this.state.password}`);
   }
   onSuccess() {
     this.props.FLASHMESSAGE_ADD({
@@ -83,6 +81,17 @@ class RegisterPage extends React.Component {
     }
     return isValid;
   }
+  ifExists(e) {
+    const id = e.target.id;
+    const value = e.target.value;
+    const errors = this.state.errors;
+    if (value !== '') {
+      this.props.AUTH_IF_EXISTS(id, value).then((res) => {
+        errors[id] = res.data.user ? 'Already in use' : '';
+        this.setState({ errors });
+      });
+    }
+  }
   render() {
     const options = map(roles, (value, key) =>
       <DropdownItem key={key} onClick={this.onClick}>{value}</DropdownItem>,
@@ -98,6 +107,7 @@ class RegisterPage extends React.Component {
               error={errors.email}
               label="Email"
               onChange={this.onChange}
+              onBlur={this.ifExists}
             />
             <FormGroupText
               id="username"
@@ -105,6 +115,7 @@ class RegisterPage extends React.Component {
               error={errors.username}
               label="Username"
               onChange={this.onChange}
+              onBlur={this.ifExists}
             />
             <FormGroupText
               id="firstName"
@@ -148,7 +159,13 @@ class RegisterPage extends React.Component {
               type="password"
               onChange={this.onChange}
             />
-            <Button disabled={this.state.isLoading}>Register</Button>
+            <Button
+              disabled={this.state.isLoading
+              || this.state.errors.email
+              || this.state.errors.username}
+            >
+              Register
+            </Button>
           </Form>
         </div>
       </div>
@@ -159,6 +176,7 @@ class RegisterPage extends React.Component {
 RegisterPage.propTypes = {
   AUTH_REGISTER: PropTypes.func.isRequired,
   FLASHMESSAGE_ADD: PropTypes.func.isRequired,
+  AUTH_IF_EXISTS: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
@@ -167,4 +185,4 @@ RegisterPage.propTypes = {
 // }
 // null is needed for mapStateToProps which isn't used the following code
 // export default connect(null, mapDispatchToProps)(RegisterPage);
-export default connect(null, { AUTH_REGISTER, FLASHMESSAGE_ADD })(RegisterPage);
+export default connect(null, { AUTH_REGISTER, AUTH_IF_EXISTS, FLASHMESSAGE_ADD })(RegisterPage);
