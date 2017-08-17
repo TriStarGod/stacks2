@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import map from 'lodash/map';
 import { Button, Form, FormGroup, Label, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
-import map from 'lodash/map';
 
-import { AUTH_REGISTER, AUTH_IF_EXISTS } from '../../redux/auth';
-// import validateInput from '../../validator/auth/register';
-import validateInput from '../../../server/shared/validator/auth/register';
+import validateInput from '../../validator/auth/register';
 import FormGroupText from '../shared/FormGroupText';
+import { AUTH_REGISTER, AUTH_IF_EXISTS } from '../../redux/auth';
 import { FLASHMESSAGE_ADD } from '../../redux/flashMessage';
 
 const roles = {
@@ -34,9 +32,9 @@ class RegisterPage extends React.Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     this.onError = this.onError.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.toggle = this.toggle.bind(this);
     this.isValid = this.isValid.bind(this);
     this.ifExists = this.ifExists.bind(this);
@@ -52,6 +50,14 @@ class RegisterPage extends React.Component {
   onError(errors) {
     this.setState({ errors, isLoading: false });
   }
+  onSuccess() {
+    this.props.FLASHMESSAGE_ADD({
+      type: 'success',
+      text: 'You signed up successfully. Welcome!',
+    });
+    this.setState({ errors: {}, isLoading: false });
+    this.props.history.push('/');
+  }
   onSubmit(e) {
     e.preventDefault();
     this.setState({ errors: {}, isLoading: true });
@@ -60,14 +66,6 @@ class RegisterPage extends React.Component {
         this.state.username, this.state.password, this.state.passwordConfirmation,
         this.state.firstName, this.state.lastName, this.state.role);
     }
-  }
-  onSuccess() {
-    this.props.FLASHMESSAGE_ADD({
-      type: 'success',
-      text: 'You signed up successfully. Welcome!',
-    });
-    this.setState({ errors: {}, isLoading: false });
-    this.props.history.push('/');
   }
   toggle() {
     this.setState({
@@ -96,14 +94,16 @@ class RegisterPage extends React.Component {
     const options = map(roles, (value, key) =>
       <DropdownItem key={key} onClick={this.onClick}>{value}</DropdownItem>,
     );
-    const errors = this.state.errors;
+    const { errors, email, username, firstName, lastName, role,
+      dropdownOpen, password, passwordConfirmation, isLoading } = this.state;
     return (
       <div className="row justify-content-center">
         <div className="col-10 col-sm-7 col-md-5 col-lg-4">
           <Form onSubmit={this.onSubmit}>
+            <h1>Register</h1>
             <FormGroupText
               id="email"
-              value={this.state.email}
+              value={email}
               error={errors.email}
               label="Email"
               onChange={this.onChange}
@@ -111,7 +111,7 @@ class RegisterPage extends React.Component {
             />
             <FormGroupText
               id="username"
-              value={this.state.username}
+              value={username}
               error={errors.username}
               label="Username"
               onChange={this.onChange}
@@ -119,23 +119,23 @@ class RegisterPage extends React.Component {
             />
             <FormGroupText
               id="firstName"
-              value={this.state.firstName}
+              value={firstName}
               error={errors.firstName}
               label="First Name"
               onChange={this.onChange}
             />
             <FormGroupText
               id="lastName"
-              value={this.state.lastName}
+              value={lastName}
               error={errors.lastName}
               label="Last Name"
               onChange={this.onChange}
             />
             <FormGroup color={errors.role ? 'danger' : ''}>
               <Label for="role">Role</Label>
-              <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              <Dropdown isOpen={dropdownOpen} toggle={this.toggle}>
                 <DropdownToggle caret>
-                  {this.state.role}
+                  {role}
                 </DropdownToggle>
                 <DropdownMenu>
                   {options}
@@ -145,7 +145,7 @@ class RegisterPage extends React.Component {
             </FormGroup>
             <FormGroupText
               id="password"
-              value={this.state.password}
+              value={password}
               error={errors.password}
               label="Password"
               type="password"
@@ -153,16 +153,16 @@ class RegisterPage extends React.Component {
             />
             <FormGroupText
               id="passwordConfirmation"
-              value={this.state.passwordConfirmation}
+              value={passwordConfirmation}
               error={errors.passwordConfirmation}
               label="Password Confirmation"
               type="password"
               onChange={this.onChange}
             />
             <Button
-              disabled={this.state.isLoading
-              || this.state.errors.email
-              || this.state.errors.username}
+              disabled={isLoading
+              || !!errors.email
+              || !!errors.username}
             >
               Register
             </Button>
@@ -177,7 +177,9 @@ RegisterPage.propTypes = {
   AUTH_REGISTER: PropTypes.func.isRequired,
   FLASHMESSAGE_ADD: PropTypes.func.isRequired,
   AUTH_IF_EXISTS: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 // function mapDispatchToProps() {

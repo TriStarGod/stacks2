@@ -27,6 +27,7 @@
     "es6-promise": "^4.1.1",
     "express": "~4.14.0",
     "express-session": "^1.15.5",
+    "jsonwebtoken": "^7.4.3",
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.6",

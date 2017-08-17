@@ -6,20 +6,22 @@
 // const User = require('../../../client/models/user');
 
 import express from 'express';
-import passport from 'passport';
+// import passport from 'passport';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import isEmpty from 'lodash/isEmpty';
 
-import validateInput from '../../shared/validator/auth/register';
+import validateInputRegister from '../../../client/validator/auth/register';
+import validateInputLogin from '../../../client/validator/auth/login';
 import User from '../../../client/models/user';
 
 const router = express.Router();
 
 // import Promise from 'bluebird';
-// // this serverValidation runs two queries
+// // this serverValidationRegister runs two queries
 // // based on each query result, an error may be added
 // // Promise.all waits for the queries before return results
-// function serverValidation(data, otherValidations) {
+// function serverValidationRegister(data, otherValidations) {
 //   const { errors } = otherValidations(data);
 //   return Promise.all([
 //     User.where({ email: data.email }).fetch().then((user) => {
@@ -32,10 +34,10 @@ const router = express.Router();
 //     .then(() => ({ errors, isValid: isEmpty(errors) }));
 // }
 
-// this serverValidation only runs one query and is more efficient than previous option
+// this serverValidationRegister only runs one query and is more efficient than previous option
 // validates that email and username values are unique
 // consider transforming database errors to display on UI???
-function serverValidation(data, otherValidations) {
+function serverValidationRegister(data, otherValidations) {
   const { errors } = otherValidations(data);
   return User.query({
     where: { email: data.email },
@@ -56,13 +58,13 @@ function serverValidation(data, otherValidations) {
 
 router.post('/register', (req, res) => {
   // setTimeout(() => {
-  //   const { errors, isValid } = validateInput(req.body);
+  //   const { errors, isValid } = validateInputRegister(req.body);
   //   if (!isValid) {
   //     res.status(400).json(errors);
   //   }
   // }, 5000);
-  // const { errors, isValid } = validateInput(req.body);
-  serverValidation(req.body, validateInput).then(({ errors, isValid }) => {
+  // const { errors, isValid } = validateInputRegister(req.body);
+  serverValidationRegister(req.body, validateInputRegister).then(({ errors, isValid }) => {
     if (isValid) {
       const { email, username, password, firstName, lastName, role } = req.body;
       const passwordDigest = bcrypt.hashSync(password, 10);
@@ -70,7 +72,7 @@ router.post('/register', (req, res) => {
         email, username, firstName, lastName, role, passwordDigest,
       }, { hasTimestamps: true }).save()
         .then(() => res.json({ success: true }))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ db: error }));
       // res.json({ success: true });
     } else {
       res.status(400).json(errors);
@@ -106,14 +108,34 @@ router.get('/exists/:id/:value', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  passport.authenticate('local')(req, res, () => {
-    // If logged in, we should have user info to send back
-    if (req.user) {
-      return res.send(JSON.stringify(req.user));
-    }
-    // Otherwise return an error
-    return res.send(JSON.stringify({ error: 'There was an error logging in.' }));
-  });
+  const { errors, isValid } = validateInputLogin(req.body);
+  if (isValid) {
+    // get email/username and password
+    const { email, password } = req.body;
+    // search
+    User.query({
+      where: { email },
+      // orWhere: { username: identifier }
+    }).fetch().then((user) => {
+      if (user) {
+        if (bcrypt.compareSync(password, user.get('passwordDigest'))) {
+          // first parameter: payload - an object that can be decoded on the client
+          // second paramter: secret - a code used to sign the jwt and to decode to verify the token
+          const token = jwt.sign({
+            id: user.get('id'),
+            username: user.get('username'),
+          }, process.env.JWTSECRET);
+          res.json({ token });
+        } else {
+          res.status(401).json({ form: 'Invalid Credentials' });
+        }
+      } else {
+        res.status(401).json({ form: 'Invalid Credentials' });
+      }
+    });
+  } else {
+    res.status(400).json(errors);
+  }
 });
 
 router.get('/logout', (req, res) => {

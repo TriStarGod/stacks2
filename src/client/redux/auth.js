@@ -23,13 +23,10 @@ export function AUTH_REGISTER(successCB, errorCB, email, username, password,
       role,
     })
       .then(() => {
-        // console.log('success');
         successCB();
         dispatch(AUTH_REGISTER_SUCCESS());
       })
       .catch((error) => {
-        // console.log('catch error');
-        console.log(error);
         if (error.response) {
           errorCB(error.response.data);
         }
@@ -66,24 +63,21 @@ const TYPE_AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE';
 const AUTH_LOGIN_REQUEST = () => ({ type: TYPE_AUTH_LOGIN_REQUEST });
 const AUTH_LOGIN_SUCCESS = () => ({ type: TYPE_AUTH_LOGIN_SUCCESS });
 const AUTH_LOGIN_FAILURE = () => ({ type: TYPE_AUTH_LOGIN_FAILURE });
-export function AUTH_LOGIN(successCB, errorCB, username, password) {
+export function AUTH_LOGIN(successCB, errorCB, email, password) {
   return (dispatch) => {
-    // console.log(`login function ${username} ${password}`);
     dispatch(AUTH_LOGIN_REQUEST());
     axios.post('/api/auth/login', {
-      username,
+      email,
       password,
     })
       .then(() => {
-        // console.log('connected');
-        // console.log(res);
         successCB();
         dispatch(AUTH_LOGIN_SUCCESS());
       })
-      .catch((error) => {
-        // console.log('error');
-        // console.log(error);
-        errorCB(error.response.data);
+      .catch(({ response }) => {
+        if (response) {
+          errorCB(response.data);
+        }
         dispatch(AUTH_LOGIN_FAILURE());
       });
   };
