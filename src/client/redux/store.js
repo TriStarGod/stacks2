@@ -24,7 +24,7 @@ const enhancer = compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f,
 );
 
-export default function configureStore(initialStore) {
+function configureStore(initialStore) {
   const store = createStore(combinedReducers, initialStore, enhancer);
   // // Hot reload reducers
   // if (module.hot) {
@@ -40,3 +40,7 @@ export default function configureStore(initialStore) {
   // }
   return store;
 }
+
+const store = configureStore();
+
+export default store;

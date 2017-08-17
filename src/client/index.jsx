@@ -11,16 +11,15 @@ import './css/musiclist.scss';
 
 // Default export from a local file
 import DevTools from './components/utils/DevTools';
-import configureStore from './redux/store';
+import setAuthToken from './utils/setAuthToken';
+import store from './redux/store';
 // import TestComponent from './testcomponent';
 import Base from './components/Base';
-
-const Store = configureStore();
 
 const renderApp = (Component) => {
   render(
     <AppContainer>
-      <Provider store={Store}>
+      <Provider store={store}>
         <div>
           <Component />
           {/* <DevTools /> */}
@@ -30,6 +29,10 @@ const renderApp = (Component) => {
     document.querySelector('#app'),
   );
 };
+// ran so site can restore token on client browser refresh
+if (localStorage.jwtToken) {
+  setAuthToken(localStorage.jwtToken);
+}
 // run first time app runs
 renderApp(Base);
 // called when a change happens

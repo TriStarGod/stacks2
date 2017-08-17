@@ -72,4 +72,8 @@ module.exports = {
     // path to output css
     new ExtractTextPlugin('css/style.css'),
   ],
+  node: {
+    net: 'empty',
+    dns: 'empty',
+  },
 };
