@@ -22,6 +22,8 @@ import routes from './routes';
 import User from '../client/models/user';
 
 require('dotenv').config();
+
+const isNotProd = process.env.NODE_ENV !== 'production';
 // require('es6-promise').polyfill(); // or require('es6-promise/auto');
 // const express = require('express');
 // const { resolve } = require('path');
@@ -58,7 +60,12 @@ app.set('view engine', 'ejs');
 
 // configures webserver
 app.use(favicon('public/img/favicon.ico'));
-app.use(logger('dev')); // more rebust logs for debugging in dev
+// options available for logger: common, dev, short, tiny
+if (isNotProd) {
+  app.use(logger('dev')); // more rebust logs for debugging in dev
+} else {
+  app.use(logger('tiny'));
+}
 // parse incoming data; uses middleware - software that transforms data before it reaches your code;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -73,28 +80,32 @@ app.use(expressSession({
   resave: false,
   saveUninitialized: false,
 }));
-// initialize and setup passpoert
-app.use(passport.initialize());
-// passport's session uses express session so it MUST come after
-app.use(passport.session());
+// // initialize and setup passpoert
+// app.use(passport.initialize());
+// // passport's session uses express session so it MUST come after
+// app.use(passport.session());
 
-// Webpack Server
-// creates a webpack based on config
-const webpackCompiler = webpack(webpackConfig);
-// adds webpack as middleware
-app.use(webpackDevMiddleware(webpackCompiler, {
-  publicPath: webpackConfig.output.publicPath,
-  stats: {
-    hot: true,
-    colors: true,
-    chunks: true,
-    'errors-only': true,
-  },
-}));
-app.use(webpackHotMiddleware(webpackCompiler, {
-  // eslint-disable-next-line no-console
-  log: console.log,
-}));
+if (isNotProd) {
+  // Webpack Server
+  // creates a webpack based on config
+  const webpackCompiler = webpack(webpackConfig);
+  // adds webpack as middleware
+  app.use(webpackDevMiddleware(webpackCompiler, {
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      hot: true,
+      colors: true,
+      chunks: true,
+      'errors-only': true,
+    },
+  }));
+  app.use(webpackHotMiddleware(webpackCompiler, {
+    // eslint-disable-next-line no-console
+    log: console.log,
+  }));
+} else {
+  //
+}
 // server anything in the public folder
 app.use(express.static(resolve(__dirname, 'public')));
 

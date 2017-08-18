@@ -5,12 +5,16 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "dev:server": "nodemon --watch src/server src/server/index.js",
+    "start": "yarn dev:es6server",
+    "dev:es5server": "nodemon --watch src/server src/server/index.js",
     "dev:es6server": "nodemon --watch src/server --exec babel-node -- ./src/server/index.js",
-    "prod:build": "babel ./src/server -d dist",
-    "prod:serve": "node dist/index.js",
+    "prod:build": "babel ./src/server -d public",
+    "prod:serve": "node public/index.html",
     "test": "jest",
     "lint": "eslint .",
+    "not cmd - working scripts": "prod:build2, ",
+    "prod:build2": "SET NODE_ENV=production&& webpack -p --config webpack.config.prod.js",
+    "prod:start2": "SET NODE_ENV=production&& node --exec babel-node -- ./src/server/index.js",
     "start2OLD": "node ./bin/www"
   },
   "dependencies": {

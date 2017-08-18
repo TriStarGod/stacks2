@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import { AUTH_LOGOUT } from '../../redux/auth';
+import { PROGRESS_INCREMENT } from '../../redux/progress';
 
 class Header extends React.Component {
   constructor(props) {
@@ -46,7 +47,10 @@ class Header extends React.Component {
     const authLinks = (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          <NavLink tag={Link} onClick={this.logout} to="#">Logout</NavLink>
+          <NavLink tag={Link} to="/api/auth/profile">Profile</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink tag={Link} to="#" onClick={this.logout}>Logout</NavLink>
         </NavItem>
       </Nav>
     );
@@ -68,6 +72,9 @@ Header.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   AUTH_LOGOUT: PropTypes.func.isRequired,
 };
-
-export default connect(state => ({ isAuthenticated: state.AUTH_LOGIN.isAuthenticated }),
-  { AUTH_LOGOUT })(Header);
+// connect binds the app state to the component's props
+// this won't overwrite other props sent from higher level components
+// this will also cause the component to re-render on every app state change
+export default connect(state => ({
+  isAuthenticated: state.AUTH_LOGIN.isAuthenticated,
+}), { AUTH_LOGOUT })(Header);

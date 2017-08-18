@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import User from '../../client/models/user';
+
 // middleware is just function that takes req, res, and next
 // req = request, res = result, next = callback function that calls the next function in the chain
 export default (req, res, next) => {
@@ -19,8 +20,12 @@ export default (req, res, next) => {
         // error in jwt token verification
         res.status(401).json({ error: 'Failed authentication' });
       } else {
+        // *** the following is less efficent than the next algorithm
+        // but it is convenient and prevents blocked and deleted users
+        // from accessing anything further; A combination of the algorithms
+        // could be formed for the best of both worlds? ***
         // find user
-        // new User({ id: decoded.id 
+        // // new User({ id: decoded.id 
         User.query({
           select: ['email', 'id', 'username'],
           where: { id: decoded.id },
@@ -28,12 +33,19 @@ export default (req, res, next) => {
           if (!user) {
             // may not find user if user was deleted or blocked
             res.status(404).json({ error: 'No such user' });
+          } else {
+            // set user in req for future use
+            req.currentUser = user;
+            // continue chain
+            next();
           }
-          // set user in req for future use
-          req.currentUser = user;
-          // continue chain
-          next();
         });
+
+        // // *** instead of querying for user and saving to req, use userid to find
+        // // info it is more efficient but could allow user to continue
+        // // accessing api even if user was deleted or blocked... ***
+        // req.userId = decoded.id;
+        // next();
       }
     });
   } else {

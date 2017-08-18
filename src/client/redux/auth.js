@@ -28,9 +28,9 @@ export function AUTH_REGISTER(successCB, errorCB, email, username, password,
         successCB();
         dispatch(AUTH_REGISTER_SUCCESS());
       })
-      .catch((error) => {
-        if (error.response) {
-          errorCB(error.response.data);
+      .catch(({ response }) => {
+        if (response) {
+          errorCB(response.data);
         }
         dispatch(AUTH_REGISTER_FAILURE());
       });

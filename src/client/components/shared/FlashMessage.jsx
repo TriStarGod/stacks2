@@ -7,6 +7,12 @@ class FlashMessage extends React.Component {
     super(props);
     this.onClick = this.onClick.bind(this);
   }
+  componentDidMount() {
+    this.timer = setInterval(() => this.onClick(), 7000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
   onClick() {
     this.props.FLASHMESSAGE_DELETE(this.props.message.id);
   }
@@ -36,7 +42,11 @@ class FlashMessage extends React.Component {
 // }
 
 FlashMessage.propTypes = {
-  message: PropTypes.object.isRequired,
+  message: PropTypes.shape({
+    id: PropTypes.func.isRequired,
+    type: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+  }).isRequired,
   FLASHMESSAGE_DELETE: PropTypes.func.isRequired,
 };
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux'; // DONT USE; it will cause components to rerender
 
+import Authenticate from './shared/Authenticate';
 import Header from './shared/Header';
 import HomePage from './home/HomePage';
 import TaskEditorPage from './task/EditorPage';
@@ -14,7 +15,7 @@ import FlashMessagesList from './shared/FlashMessagesList';
 // the exact prop in the HomePage is used to only activate it for / and not /a
 // by not setting the prop exact, fuzzy matches can occur 
 // like /account/profile/some/thing would work for the second route
-function Base(props) {
+function Base() {
   return (
     <BrowserRouter>
       <div className="container">
@@ -25,21 +26,13 @@ function Base(props) {
           <Route exact path="/" component={HomePage} />
           <Route exact path="/api/auth/login" component={LoginPage} />
           <Route exact path="/api/auth/register" component={RegisterPage} />
-          <Route path="/api/profile/:id" component={ProfilePage} />
-          <Route path="/task/editor/:id" component={TaskEditorPage} />
+          <Route path="/api/profile/:id" component={Authenticate(ProfilePage)} />
+          <Route path="/task/editor/:id" component={Authenticate(TaskEditorPage)} />
         </section>
       </div>
     </BrowserRouter>
   );
 }
 
-// maps the state to the props of the component
-function mapStateToProps(state) {
-  return {
-    ...state,
-  };
-}
-// connect binds the app state to the component's props
-// this won't overwrite other props sent from higher level components
-// this will also cause the component to re-render on every app state change
-export default connect(mapStateToProps)(Base);
+// DON'T USE connect
+export default Base;
