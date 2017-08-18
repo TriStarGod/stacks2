@@ -1,49 +1,49 @@
 // // loading webserver modules
-// import express from 'express';
-// import { resolve } from 'path';
-// import favicon from 'serve-favicon';
-// import logger from 'morgan';
-// import cookieParser from 'cookie-parser';
-// import bodyParser from 'body-parser';
-// import mongoose from 'mongoose';
-// import passport from 'passport';
-// // an approach for connecting express to our auth setup
-// import { Strategy as LocalStrategy } from 'passport-local';
-// import expressSession from 'express-session';
-// // eslint-disable-next-line import/no-extraneous-dependencies
-// import webpack from 'webpack';
-// // eslint-disable-next-line import/no-extraneous-dependencies
-// import webpackDevMiddleware from 'webpack-dev-middleware';
-// // eslint-disable-next-line import/no-extraneous-dependencies
-// import webpackHotMiddleware from 'webpack-hot-middleware';
+import express from 'express';
+import { resolve } from 'path';
+import favicon from 'serve-favicon';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import passport from 'passport';
+// an approach for connecting express to our auth setup
+import { Strategy as LocalStrategy } from 'passport-local';
+import expressSession from 'express-session';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import webpack from 'webpack';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import webpackDevMiddleware from 'webpack-dev-middleware';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
-// import webpackConfig from '../../webpack.config';
-// import routes from './routes';
-// import User from '../client/models/user';
+import webpackConfig from '../../webpack.config';
+import routes from './routes';
+import User from '../client/models/user';
 
 require('dotenv').config();
 // require('es6-promise').polyfill(); // or require('es6-promise/auto');
-const express = require('express');
-const { resolve } = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-// const mongoose = require('mongoose');
-const passport = require('passport');
+// const express = require('express');
+// const { resolve } = require('path');
+// const favicon = require('serve-favicon');
+// const logger = require('morgan');
+// const cookieParser = require('cookie-parser');
+// const bodyParser = require('body-parser');
+// -- const mongoose = require('mongoose');
+// const passport = require('passport');
 // an approach for connecting express to our auth setup
-// const LocalStrategy = require('passport-local').Strategy;
-const expressSession = require('express-session');
+// -- const LocalStrategy = require('passport-local').Strategy;
+// const expressSession = require('express-session');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const webpack = require('webpack');
+// const webpack = require('webpack');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const webpackDevMiddleware = require('webpack-dev-middleware');
+// const webpackDevMiddleware = require('webpack-dev-middleware');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const webpackHotMiddleware = require('webpack-hot-middleware');
+// const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const webpackConfig = require('../../webpack.config');
-const routes = require('./routes');
-const User = require('../client/models/user');
+// const webpackConfig = require('../../webpack.config');
+// const routes = require('./routes');
+// const User = require('../client/models/user');
 
 // instances of express server
 const app = express();

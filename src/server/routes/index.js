@@ -1,14 +1,15 @@
-// import authentication from './api/authentication';
-// import users from './api/users';
-const auth = require('./api/auth');
-const users = require('./api/users');
+import auth from './api/auth';
+import user from './api/user';
+import task from './api/task';
+// const auth = require('./api/auth');
+// const user = require('./api/user');
+
 
 // GET, POST, PUT, DELETE
-module.exports = function Routes(app) {
-  // auth(app, passport);
+export default function routes(app) {
   app.use('/api/auth', auth);
-  // users(app);
-  app.use('/api/user', users);
+  app.use('/api/user', user);
+  app.use('/api/task', task);
   app.get('/*', (req, res) => {
     res.render('index', { title: `${process.env.APP_NAME} Alpha` });
   });

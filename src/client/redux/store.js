@@ -10,6 +10,7 @@ import DevTools from '../components/utils/DevTools';
 import { PROGRESS_REDUCER } from './progress';
 import { AUTH_REGISTER_REDUCER, AUTH_LOGIN_REDUCER } from './auth';
 import { FLASHMESSAGE_REDUCER } from './flashMessage';
+import { TASK_REDUCER } from './task';
 
 // combine the reducers into one "root" reducer
 const combinedReducers = combineReducers({
@@ -17,6 +18,7 @@ const combinedReducers = combineReducers({
   AUTH_REGISTER: AUTH_REGISTER_REDUCER,
   AUTH_LOGIN: AUTH_LOGIN_REDUCER,
   FLASHMESSAGES: FLASHMESSAGE_REDUCER,
+  TASK: TASK_REDUCER,
 });
 const enhancer = compose(
   applyMiddleware(logger, thunk),

@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input, Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import map from 'lodash/map';
+
+import FormGroupText from '../shared/FormGroupText';
+import { TASK_ADD, TASK_UPDATE } from '../../redux/task';
 
 const roles = [
   'Level 0',
@@ -14,17 +18,30 @@ class EditorPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      errors: {},
+      data0: '',
       taskId: 0,
       dropdownOpen: false,
       currentValue: '.Level 1',
+      isLoading: false,
     };
+    this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.onSubmitTaskUpdate = this.onSubmitTaskUpdate.bind(this);
     this.toggle = this.toggle.bind(this);
+  }
+  onChange(e) {
+    this.setState({ [e.target.id]: e.target.value });
   }
   onClick(e) {
     this.setState({
       currentValue: e.currentTarget.textContent,
     });
+  }
+  onSubmitTaskUpdate(e) {
+    e.preventDefault();
+    // this.props.TASK_UPDATE(this.state);
+    this.props.TASK_ADD(this.state); // for testing
   }
   toggle() {
     this.setState({
@@ -35,6 +52,7 @@ class EditorPage extends React.Component {
     const options = map(roles, value =>
       <DropdownItem key={value} onClick={this.onClick}>{value}</DropdownItem>,
     );
+    const { errors, data0, isLoading } = this.state;
     return (
       <div>
         <div className="container">
@@ -53,15 +71,15 @@ class EditorPage extends React.Component {
           </div>
           <div className="row">
             <div className="col-sm-12">
-              <Form>
-                <FormGroup>
-                  <Label for="data0">Data 0</Label>
-                  <Input type="textarea" name="data0" id="data0" />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="data1">Data 1</Label>
-                  <Input type="textarea" name="data1" id="data1" />
-                </FormGroup>
+              <Form onSubmit={this.onSubmitTaskUpdate}>
+                <FormGroupText
+                  id="data0"
+                  value={data0}
+                  error={errors.data0}
+                  label="Data 0"
+                  onChange={this.onChange}
+                />
+                <Button disabled={isLoading}>Save</Button>
               </Form>
             </div>
           </div>
@@ -113,6 +131,9 @@ class EditorPage extends React.Component {
   }
 }
 
-EditorPage.propTypes = {};
+EditorPage.propTypes = {
+  TASK_ADD: PropTypes.func.isRequired,
+  TASK_UPDATE: PropTypes.func.isRequired,
+};
 
-export default EditorPage;
+export default connect(null, { TASK_ADD, TASK_UPDATE })(EditorPage);

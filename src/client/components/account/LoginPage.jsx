@@ -60,7 +60,6 @@ class LoginPage extends React.Component {
               error={errors.email}
               label="Email"
               onChange={this.onChange}
-              onBlur={this.ifExists}
             />
             <FormGroupText
               id="password"
@@ -70,7 +69,7 @@ class LoginPage extends React.Component {
               type="password"
               onChange={this.onChange}
             />
-            <Button disabled={isLoading}>Log In</Button>
+            <Button disabled={isLoading}>Login</Button>
           </Form>
         </div>
       </div>
